@@ -4,12 +4,12 @@ Service provides helpers methods for accessing NfcV tags on Android
 
 ## Install
 
-```npm install https://github.com/valentiniljaz/cordova-nfc-plugin```
+```npm install https://github.com/valentiniljaz/cordova-nfcv-plugin```
 
 Add provider for NfcvService within your module:
 
 ```
-import {NfcvService} from 'cordova-nfc-plugin/ionic2';
+import {NfcvService} from 'cordova-nfcv-plugin/ionic2';
 
 @NgModule({
   providers: [
@@ -29,7 +29,7 @@ import { Platform } from 'ionic-angular';
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { TabsPage } from '../pages/tabs/tabs';
-import { NfcvService } from 'cordova-nfc-plugin/ionic2';
+import { NfcvService } from 'cordova-nfcv-plugin/ionic2';
 
 @Component({
   templateUrl: 'app.html'
@@ -117,7 +117,7 @@ import {Component, OnInit} from '@angular/core';
 import {Platform} from 'ionic-angular';
 import {StatusBar, Splashscreen, Device} from 'ionic-native';
 
-import {NfcvService} from 'cordova-nfc-plugin/ionic2';
+import {NfcvService} from 'cordova-nfcv-plugin/ionic2';
 
 @Component({
     templateUrl: 'my-app.html'
@@ -187,7 +187,7 @@ import { Platform } from 'ionic-angular';
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 
-import {NfcvService} from 'cordova-nfc-plugin/ionic2';
+import {NfcvService} from 'cordova-nfcv-plugin/ionic2';
 
 @Component({
   templateUrl: 'my-app.html'
