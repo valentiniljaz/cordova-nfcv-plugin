@@ -1,0 +1,1 @@
+export {NfcvService} from "./src/nfcv.service";

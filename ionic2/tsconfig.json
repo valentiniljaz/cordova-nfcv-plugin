@@ -1,0 +1,21 @@
+{
+  "compilerOptions": {
+    "declaration": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "lib": ["es6", "dom"],
+    "module": "es6",
+    "moduleResolution": "node",
+    "sourceMap": true,
+    "target": "es5",
+    "typeRoots": [
+      "../node_modules/@types"
+    ]
+  },
+  "files": [
+    "index.ts"
+  ],
+  "exclude": [
+    "../node_modules"
+  ]
+}
