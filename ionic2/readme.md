@@ -45,18 +45,26 @@ export class MyApp implements OnInit {
       statusBar.styleDefault();
       splashScreen.hide();
 
-      nfcvService.addNdefListener();
+      nfcvService.waitForNdef();
     });
   }
 
   ngOnInit() {
-    this.nfcvService.onTag().subscribe((tag) => {
-      //Avoid reading null tag on first call
-      if (tag) {
-        console.log('Found tag:', tag);
-        this.tag = tag;
+    this.nfcvService.onNdef(
+      (tag) => {
+        //Avoid reading null tag on first call
+        if (tag) {
+          console.log('Found tag:', tag);
+          this.tag = tag;
+        }
+      },
+      (error) => {
+        //Avoid reading null tag on first call
+        if (error) {
+          console.log('Error tag:', error);
+        }
       }
-    });
+    );
   }
 
   read() {
@@ -82,34 +90,44 @@ app.html
 ```
 
 1) In constructor I setup NdefListener and within `ngOnInit` I subscribe to Ndef messages.
-2) Once a Nfc intent is received (phone will beep) its Ndef message is sent over to `onTag`.
-3) In `onTag` I set the property `tag` to the current read tag which is then displayed in view.
+2) Once a Nfc intent is received (phone will beep) its Ndef message is sent over to `onNdef`.
+3) In `onNdef` I set the property `tag` to the current read tag which is then displayed in view.
 3) View has a button which calls `read` method when tapped.
-4) `NfcvService.read` method waits for another Nfc intent (phone will beep again). Once an intent is received it reads data from specified addresses and returns read data. You will notice that when this intent is received `onTag` will also receive new event (but the same tag).
+4) `NfcvService.read` method waits for another Nfc intent (phone will beep again). Once an intent is received it reads data from specified addresses and returns read data. You will notice that when this intent is received `onNdef` will also receive new event (but the same tag).
 
-The idea for NdefListener is to just handle Ndef messages and nothing else. Once a tag is received within `onTag` you display specific options for the received tag. Then the user chooses an option which will be executed against that tag. Ndef listener is separated from read/write operations. With NdefListener you receive an event each time a tag's Ndef message is read, and that's it. If you want to read from that device, Android has to dispatch new intent.
+The idea for NdefListener is to just handle Ndef messages and nothing else. Once a tag is received within `onNdef` you display specific options for the received tag. Then the user chooses an option which will be executed against that tag. Ndef listener is separated from read/write operations. With NdefListener you receive an event each time a tag's Ndef message is read, and that's it. If you want to read from that device, Android has to dispatch new intent.
 
-## NfcvService.addNdefListener
+## NfcvService.waitForNdef
 
 In order to get notified whenever a new tag is discovered you need to setup two things:
 
 1) Within `platform.ready()` setup ndefListener: 
 ```
-nfcvService.addNdefListener();
+nfcvService.waitForNdef();
 ```
 This method will add new event listener for Ndef messages. Whenever a new tag is discovered it will push new event down the observable stream. You can subscribe to this stream and you'll be notified whenever a tag is discovered.
 
-2) Subscribe to obsevable:
+2) Subscribe to stream:
 ```
-this.nfcvService.onTag().subscribe((tag) => {
-    if (tag !== null) {
-        console.log('Tag', tag);
+this.nfcvService.onNdef(
+  (tag) => {
+    //Avoid reading null tag on first call
+    if (tag) {
+      console.log('Found tag:', tag);
+      this.tag = tag;
     }
-});
+  },
+  (error) => {
+    //Avoid reading null tag on first call
+    if (error) {
+      console.log('Error tag:', error);
+    }
+  }
+);
 ```
 Since this is BehaviorSubject the first tag will always be `null`. You can subscribe within `ngOnInit` method or basically any other as well.
 
-`addNdefListener` method starts listening for Ndef messages. Whenever it receives a Ndef message it dispatches an event. You can listen to the event by subscribing with `onTag` method. Cordova plugin sends Ndef message as byte array so you need to parse the array in order to retrieve Ndef message. Method `parseNdef` is used to parse Ndef messages. At the moment `parseNdef` only understands messages advertised by Nfcv hardware refered to in attached datasheet.
+`waitForNdef` method starts listening for Ndef messages. Whenever it receives a Ndef message it dispatches an event. You can listen to the event by subscribing with `onNdef` method. Cordova plugin sends Ndef message as byte array so you need to parse the array in order to retrieve Ndef message. Method `parseNdef` is used to parse Ndef messages.
 
 Complete example:
 ```
@@ -130,12 +148,12 @@ export class MyApp implements OnInit {
             StatusBar.styleDefault();
             Splashscreen.hide();
 
-            nfcvService.addNdefListener();
+            nfcvService.waitForNdef();
         });
     }
 
     ngOnInit() {
-        this.nfcvService.onTag().subscribe((tag) => {
+        this.nfcvService.onNdef((tag) => {
             console.log('Tag', tag);
         });
     }
@@ -188,9 +206,38 @@ nfcvService.readRange(0x03, 0x40, true).then((data) => {
 });
 ```
 
+## NfcvService.waitForTag
+
+Method is used to start lsitening for NfcV intents.
+
+## NfcvService.onTag
+
+When a NfcV intent is triggered success callback defined within this method will be called.
+
+```
+this.nfcvService.waitForTag();
+this.nfcvService.onTag(
+    (tag) => {
+        console.log('Found tag', tag);
+        this.nfcvService.readRange(0x03, 0x40, false)
+            .then((data) => {
+                console.log('Read data:', data);
+                this.nfcvService.waitForTag();
+            })
+            .catch((error) => {
+                console.log('Error reading:', error);
+                this.nfcvService.waitForTag();
+            });
+    },
+    (error) => {
+        console.log('Error on tag', error);
+        this.nfcvService.waitForTag();
+    });
+```
+
 ## NfcvService.init
 
-`init` method is not required in most cases. Everytime you invoke any other method (addNdefListener, read, write etc.) from Cordova plugin, NfcV adapater is initialized. But sometimes you would like to initilize the adpater to see if the NfcV adapter can be properly setup, in this case you can invoke `init`.
+`init` method is not required in most cases. Everytime you invoke any other method (waitForNdef, read, write etc.) from Cordova plugin, NfcV adapater is initialized. But sometimes you would like to initilize the adpater to see if the NfcV adapter can be properly setup, in this case you can invoke `init`.
 
 ```
 import { Component } from '@angular/core';

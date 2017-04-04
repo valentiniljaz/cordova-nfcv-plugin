@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {BehaviorSubject} from 'rxjs/Rx';
+import {BehaviorSubject, Subject} from 'rxjs/Rx';
 
 declare var NfcV: any;
 declare var require: {
@@ -16,10 +16,17 @@ export class NfcvService {
     };
     private ndefRecordWithDeviceName = 0;
 
-    private tagSubject: BehaviorSubject<any>;
+    private ndefSubject: BehaviorSubject<any>;
+    private ndefError: BehaviorSubject<any>;
+    private tagSubject: Subject<any>;
+    private tagError: Subject<any>;
+    private tagListener = null;
 
     constructor() {
-        this.tagSubject = new BehaviorSubject(null);
+        this.ndefSubject = new BehaviorSubject(null);
+        this.ndefError = new BehaviorSubject(null);
+        this.tagSubject = new Subject();
+        this.tagError = new Subject();
     }
 
     // NfcV methods
@@ -69,17 +76,50 @@ export class NfcvService {
         });
     }
 
-    public addNdefListener() {
+    public waitForNdef() {
         document.addEventListener('NdefTag', (event) => {
-            console.log('Event', event);
-            this.tagSubject.next(this.parseNdef(JSON.parse((<any>event).ndef)));
+            console.log('NdefTag Event', event);
+            let deviceTitle = this.parseNdef(JSON.parse((<any>event).ndef));
+            if (deviceTitle == 'UNDEFINED_NDEF' || deviceTitle == 'NDEF_PARSE_ERROR') {
+                this.ndefError.next(deviceTitle);
+            } else {
+                this.ndefSubject.next(deviceTitle);
+            }
         }, true);
 
         NfcV.addNdefListener();
     }
 
-    public onTag(): BehaviorSubject<any> {
-        return this.tagSubject;
+    public onNdef(onSuccess: Function, onError: Function) {
+        this.ndefSubject.subscribe((data) => {
+            onSuccess(data);
+        });
+        this.ndefError.subscribe((error) => {
+            onError(error);
+        });
+    }
+
+    public waitForTag(device?) {
+        if (this.tagListener === null) {
+            this.tagListener = this.startListening(true, device)
+                .then((data) => {
+                    this.tagListener = null;
+                    this.tagSubject.next(data);
+                })
+                .catch((error) => {
+                    this.tagListener = null;
+                    this.tagError.next(error);
+                });
+        }
+    }
+
+    public onTag(onSuccess: Function, onError: Function) {
+        this.tagSubject.subscribe((data) => {
+            onSuccess(data);
+        });
+        this.tagError.subscribe((error) => {
+            onError(error);
+        });
     }
 
     public startListening(startListen?, device?) {
@@ -250,7 +290,7 @@ export class NfcvService {
                 });
         });
     }
-    
+
     public readRange(startBlock, endBlock, startListen?, device?) {
         let blocks = [];
         for(let i = startBlock; i <= endBlock; i++) {
