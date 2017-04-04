@@ -22,7 +22,9 @@ export class NfcvService {
         this.tagSubject = new BehaviorSubject(null);
     }
 
-    init() {
+    // NfcV methods
+
+    public init() {
         return new Promise((resolve, reject) => {
             NfcV.init((success) => {
                 resolve(success);
@@ -32,7 +34,7 @@ export class NfcvService {
         });
     }
 
-    isAvailable() {
+    public isAvailable() {
         return new Promise((resolve, reject) => {
             NfcV.checkNfcVAvailability((success) => {
                 resolve(success);
@@ -42,7 +44,7 @@ export class NfcvService {
         });
     }
 
-    getSystemInfo(startListen?) {
+    public getSystemInfo(startListen?) {
         console.log('** SYSTEM INFO START **');
         return new Promise((mainResolve, mainReject) => {
             this.startListening(startListen)
@@ -67,14 +69,6 @@ export class NfcvService {
         });
     }
 
-    public bytesToString(array) {
-        var result = "";
-        for (var i = 0; i < array.length; i++) {
-            result += String.fromCharCode(array[i]);
-        }
-        return result;
-    }
-
     public addNdefListener() {
         document.addEventListener('NdefTag', (event) => {
             console.log('Event', event);
@@ -88,7 +82,7 @@ export class NfcvService {
         return this.tagSubject;
     }
 
-    startListening(startListen?, device?) {
+    public startListening(startListen?, device?) {
         if (startListen === undefined) {
             startListen = true;
         }
@@ -118,33 +112,11 @@ export class NfcvService {
         }
     }
 
-    stopListening() {
+    public stopListening() {
         NfcV.stopListening();
     }
 
-    parseNdef(ndef) {
-        if (ndef.length < 1) {
-            return 'UNDEFINED_NDEF';
-        }
-
-        let ndefParser = <any>require('@taptrack/ndef');
-        let message;
-        try {
-            message = ndefParser.Message.fromBytes(ndef);
-        } catch(e) {
-            return 'NDEF_PARSE_ERROR';
-        }
-
-        let records = message.getRecords();
-        if (records.length > this.ndefRecordWithDeviceName) {
-            let recordContents = ndefParser.Utils.resolveTextRecord(records[this.ndefRecordWithDeviceName]);
-            return recordContents.content;
-        } else {
-            return 'NDEF_PARSE_ERROR';
-        }
-    }
-
-    read(blocks: any[], startListen?, device?): Promise<any> {
+    public read(blocks: any[], startListen?, device?): Promise<any> {
         console.log('** READ START **', blocks);
         let readData = [];
         return new Promise((mainResolve, mainReject) => {
@@ -185,7 +157,7 @@ export class NfcvService {
         });
     }
 
-    readBlock(block, startListen?): Promise<any> {
+    public readBlock(block, startListen?): Promise<any> {
         console.log('** READ BLK START **', block);
         return new Promise((mainResolve, mainReject) => {
             this.startListening(startListen)
@@ -211,7 +183,7 @@ export class NfcvService {
         });
     }
 
-    write(blocks: any[], startListen?, device?): Promise<any> {
+    public write(blocks: any[], startListen?, device?): Promise<any> {
         console.log('** WRITE START **', blocks);
         let writtenData = [];
         return new Promise((mainResolve, mainReject) => {
@@ -253,7 +225,7 @@ export class NfcvService {
         });
     }
 
-    writeBlock(block, data, startListen?): Promise<any> {
+    public writeBlock(block, data, startListen?): Promise<any> {
         console.log('** WRITE BLK START **', block, data);
         return new Promise((mainResolve, mainReject) => {
             this.startListening(startListen)
@@ -279,7 +251,7 @@ export class NfcvService {
         });
     }
     
-    readRange(startBlock, endBlock, startListen?, device?) {
+    public readRange(startBlock, endBlock, startListen?, device?) {
         let blocks = [];
         for(let i = startBlock; i <= endBlock; i++) {
             blocks.push({
@@ -298,7 +270,31 @@ export class NfcvService {
             });
     }
 
-    Uint8ArraySplice(arr, starting, deleteCount, elements?) {
+    // Helper methods
+
+    public parseNdef(ndef) {
+        if (ndef.length < 1) {
+            return 'UNDEFINED_NDEF';
+        }
+
+        let ndefParser = <any>require('@taptrack/ndef');
+        let message;
+        try {
+            message = ndefParser.Message.fromBytes(ndef);
+        } catch(e) {
+            return 'NDEF_PARSE_ERROR';
+        }
+
+        let records = message.getRecords();
+        if (records.length > this.ndefRecordWithDeviceName) {
+            let recordContents = ndefParser.Utils.resolveTextRecord(records[this.ndefRecordWithDeviceName]);
+            return recordContents.content;
+        } else {
+            return 'NDEF_PARSE_ERROR';
+        }
+    }
+
+    public Uint8ArraySplice(arr, starting, deleteCount, elements?) {
         if (arguments.length === 1) {
             return arr;
         }
@@ -315,12 +311,20 @@ export class NfcvService {
         return splicedArray;
     }
 
-    byteArrayToInt (byteArray) {
+    public byteArrayToInt(byteArray) {
         let value = 0;
         for (let i = byteArray.length - 1; i >= 0; i--) {
             value = (value * 256) + byteArray[i];
         }
         return value;
     };
+
+    public bytesToString(array) {
+        var result = "";
+        for (var i = 0; i < array.length; i++) {
+            result += String.fromCharCode(array[i]);
+        }
+        return result;
+    }
 
 }

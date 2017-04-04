@@ -175,7 +175,17 @@ this.nfcvService.write([
     { block: new Uint8Array([0x01]]), data: new Uint8Array([0x01, 0x02, 0x03, 0x04]) },
     { block: new Uint8Array([0x02]]), data: new Uint8Array([0x01, 0x02, 0x03, 0x04]) }
 ], true, device);
+
 ```
+
+## NfcvService.readRange
+
+Read data within specified range. Method will return one array with all read data from block in specified range.
+
+```
+nfcvService.readRange(0x03, 0x40, true).then((data) => {
+  console.log('NfcV Data from block ' + startBlock + ' - ' + endBlock, data);
+});
 
 ## NfcvService.init
 
@@ -215,3 +225,35 @@ nfcvService.isAvailable().then((success) => {
   console.log('NfcV Available', success);
 });
 ```
+
+## NfcvService.getSystemInfo
+
+Read system info data. See attached datasheed 01 chapter 26.12. Method will return byte array with system info.
+
+```
+nfcvService.getSystemInfo(true).then((systemInfo) => {
+  console.log('NfcV System Info', systemInfo);
+});
+```
+
+## NfcvService.parseNdef
+
+Helper method for parsing NDEF message from byte array. By default it returns text of first record.
+
+
+## NfcvService.Uint8ArraySplice
+
+Helper method for splicing Uint8Array.
+
+```
+Uint8ArraySplice(arr, starting, deleteCount, elements?)
+```
+
+## NfcvService.byteArrayToInt
+
+Convert byte array to integer.
+
+
+## NfcvService.bytesToString
+
+Convert byte array to string.
