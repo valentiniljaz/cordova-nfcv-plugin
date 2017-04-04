@@ -7,6 +7,6 @@ Thumbs.db
 .DS_Store
 
 # Ignored files
-*.js
-*.map
-*.d.ts
+/ionic2/**/*.js
+/ionic2/**/*.map
+/ionic2/**/*.d.ts
