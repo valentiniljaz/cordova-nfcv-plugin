@@ -186,6 +186,7 @@ Read data within specified range. Method will return one array with all read dat
 nfcvService.readRange(0x03, 0x40, true).then((data) => {
   console.log('NfcV Data from block ' + startBlock + ' - ' + endBlock, data);
 });
+```
 
 ## NfcvService.init
 
