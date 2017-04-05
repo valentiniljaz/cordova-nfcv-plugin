@@ -310,6 +310,44 @@ export class NfcvService {
             });
     }
 
+    public readUntil(startBlock: Number, checkConditionUntil: Function, maxBlocks?: Number, startListen?) {
+        return new Promise((readResolve, readReject) => {
+            let blocks = [];
+
+            let readNextAction = (blockIndx) => {
+                if (maxBlocks !== undefined && blockIndx > maxBlocks) {
+                    // Done reading
+                    readResolve(blocks);
+                    return;
+                }
+
+                let blockAddr = new Uint8Array([ startBlock + blockIndx ]);
+                this.readBlock(blockAddr, blockIndx == 0 ? startListen : false)
+                    .then((blockData) => {
+                        // If checkConditionUntil returns true then reading is not completed
+                        if (checkConditionUntil(blockData, blockAddr, blockIndx)) {
+                            blocks.push({
+                                block: blockAddr,
+                                data: blockData
+                            });
+                            readNextAction(++blockIndx);
+                        } else {
+                            // If it returns false, reading is done and we can return all blocks
+                            blocks.push({
+                                block: blockAddr,
+                                data: blockData
+                            });
+                            readResolve(blocks);
+                        }
+                    })
+                    .catch((error) => {
+                        readReject(error);
+                    });
+            };
+            readNextAction(0);
+        });
+    }
+
     // Helper methods
 
     public parseNdef(ndef) {

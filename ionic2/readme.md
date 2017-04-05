@@ -206,6 +206,36 @@ nfcvService.readRange(0x03, 0x40, true).then((data) => {
 });
 ```
 
+## NfcvService.readUntil
+
+Read data until some condition is met. Method accepts:
+
+* `startBlock` address,
+* `checkConditionUntil` callback,
+* `maxBlocks` count,
+* `startListen`.
+
+Method will read data starting on address `startBlock` until `checkConditionUntil` returns `false` or `maxBlocks` is reached. Callback `checkConditionUntil` is called on each read block with the following arguments:
+
+* `blockData` - read data from block `blockAddr`,
+* `blockAddr` - current block address, 
+* `blockIndx` - current block index.
+
+```
+this.nfcvService.readUntil(
+    0x03,
+    (data) => {
+        if (data[0] == 0 && data[1] == 0) {
+            return false;
+        } else {
+            return true;
+        }
+    },
+    32,
+    true
+);
+```
+
 ## NfcvService.waitForTag
 
 Method is used to start listening for NfcV intents.
