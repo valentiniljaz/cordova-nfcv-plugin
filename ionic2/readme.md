@@ -161,6 +161,45 @@ export class MyApp implements OnInit {
 
 ```
 
+## startListen parameter
+
+If you check out `NfcvService.ts` you will notice, that many methods accept parameter `startListen`. 
+The parameter tells the methods whether to wait and listen for NfcV intent or to use already 
+dispatched intent. In order to execute many requests against a tag in just one go, you need to 
+use one NfcV intent. To use only one intent you must manipulate `startListen` parameter, which 
+must be `true` only the first time and `false` for all subsequent requests.
+
+```
+this.nfcvService.waitForTag(); // Start listening for new NfcV intent
+this.nfcvService.onTag(
+	(tag) => {
+		console.log('Found tag', tag);
+		this.nfcvService.getSystemInfo(false) // Use the same NfcV intent
+			.then((systemInfo) => {
+				console.log('SystemInfo:', systemInfo); 
+				// Check the tag's UID and AFI (optionally)
+				// If the tag is the one, then:
+				this.nfcvService.readRange(0x03, 0x40, false) // Use the same NfcV intent
+					.then((data) => {
+						console.log('Read data:', data);
+						this.nfcvService.waitForTag(); // Start listening for new NfcV intent
+					})
+					.catch((error) => {
+						console.log('Error reading:', error);
+						this.nfcvService.waitForTag(); // Start listening for new NfcV intent
+					});
+			})
+			.catch((error) => {
+				console.log('Error reading:', error);
+				this.nfcvService.waitForTag(); // Start listening for new NfcV intent
+			});
+	},
+	(error) => {
+		console.log('Error on tag', error);
+		this.nfcvService.waitForTag(); // Start listening for new NfcV intent
+	});
+```
+
 ## NfcvService.read
 
 `read` method accepts array of blocks from which to read data. It returns new array with block addresses and block data.
