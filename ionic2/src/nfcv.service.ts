@@ -61,7 +61,11 @@ export class NfcvService {
                             let systemInfoBytes = new Uint8Array(systemInfoData);
                             console.log('** SYSTEM INFO END **', systemInfoBytes);
                             if (systemInfoBytes[0] !== 0) {
-                                mainReject('E_SYSTEM_INFO_FAILED | CODE: ' + systemInfoBytes[1]);
+                                if (systemInfoBytes.length >= 1) {
+                                    mainReject('E_SYSTEM_INFO_FAILED | ERROR CODE: ' + systemInfoBytes[1]);
+                                } else {
+                                    mainReject('E_SYSTEM_INFO_FAILED | RESPONSE CODE: ' + systemInfoBytes[0]);
+                                }
                             } else {
                                 mainResolve(this.Uint8ArraySplice(systemInfoBytes, 0, 1));
                             }
