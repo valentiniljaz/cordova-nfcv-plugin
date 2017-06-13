@@ -25,11 +25,8 @@ export class MyModule {}
 ```
 
 If you won't be using Ionic2+ framework but your project will use Angular 2+, you can still
-use Nfcv service. Make sure you install NPM dependency:
-
-`npm install https://github.com/valentiniljaz/cordova-nfcv-plugin`
-
-and then you just import the service and use it.
+use Nfcv service. Make sure you install NPM dependency and then you just import the service 
+and use it.
 
 ## Example
 
