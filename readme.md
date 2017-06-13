@@ -1,6 +1,14 @@
 # cordova-nfcv-plugin
 
-Cordova plugin for reading and writing to NFC tags using NfcV protocol (with support for Ionic2)
+Cordova plugin for reading and writing to NFC tags using NfcV protocol (with support for Ionic2+)
+
+Installation:
+----------------------------------------------------
+Install for Ionic2+:
+`ionic plugin add https://github.com/valentiniljaz/cordova-nfcv-plugin`
+
+Install for Cordova (without Ionic2+)
+`cordova plugin add https://github.com/valentiniljaz/cordova-nfcv-plugin`
 
 Configuration:
 ----------------------------------------------------
@@ -23,7 +31,7 @@ Usage:
 
 #### `NfcV.init: function (success, error));`
 
-Initialize plugin. In most cases not even required, since every request also initializes the adapter.
+Initializes plugin. In most cases not even required, since every request also initializes the adapter.
 
 * success - Function returns "NFC_INIT_OK"
 * error - Check error flags below
@@ -133,6 +141,6 @@ Create new file within `platforms/android/res/xml/nfc_tech_filter.xml`:
 </resources>
 ```
 
-#### Ionic2 service: NfcvService
+#### Ionic2+ service: NfcvService
 
 [More...](./ionic2/readme.md)

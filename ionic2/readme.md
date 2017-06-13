@@ -1,6 +1,10 @@
-# Ionic2 NfcV Service
+# Ionic2+ NfcV Service
 
-Service provides helpers methods for accessing NfcV tags on Android
+Service provides helpers methods for accessing NfcV tags on Android.
+
+Support for Ionic2+ is optional. You can use the plugin without Ionic2+. If you'll be using Angular 2+ 
+with you project you can even use NfcV Service. There is nothing specific about the plugin that would 
+limit its use only to Ionic2+. It' only tested it with Ionic2, but it can be used with any other framework.
 
 ## Install
 
@@ -19,6 +23,13 @@ import {NfcvService} from 'cordova-nfcv-plugin/ionic2';
 export class MyModule {}
 
 ```
+
+If you won't be using Ionic2+ framework but your project will use Angular 2+, you can still
+use Nfcv service. Make sure you install NPM dependency:
+
+`npm install https://github.com/valentiniljaz/cordova-nfcv-plugin`
+
+and then you just import the service and use it.
 
 ## Example
 
