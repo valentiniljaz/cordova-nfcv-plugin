@@ -143,6 +143,7 @@ Create new file within `platforms/android/res/xml/nfc_tech_filter.xml`:
 </resources>
 ```
 
-#### Ionic2+ service: NfcvService
+Ionic2+ service: NfcvService
+----------------------------------------------------
 
-[More...](./ionic2/readme.md)
+[More about Ionic2+ support ...](./ionic2/readme.md)
