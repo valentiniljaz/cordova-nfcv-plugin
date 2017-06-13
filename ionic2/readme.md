@@ -1,10 +1,10 @@
 # Ionic2+ NfcV Service
 
-Service provides helpers methods for accessing NfcV tags on Android.
+Service provides helper methods for accessing NfcV tags on Android.
 
 Support for Ionic2+ is optional. You can use the plugin without Ionic2+. If you'll be using Angular 2+ 
-with you project you can even use NfcV Service. There is nothing specific about the plugin that would 
-limit its use only to Ionic2+. It' only tested it with Ionic2, but it can be used with any other framework.
+(but not Ionic2+) within you project you can still use NfcV Service. There is nothing specific about the plugin that would 
+limit its use only to Ionic2+. It's only tested it with Ionic2, but it can be used with any other framework.
 
 ## Install
 
