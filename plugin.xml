@@ -1,35 +1,34 @@
 <?xml version="1.0" encoding="UTF-8"?>
- 
 <plugin xmlns="http://www.phonegap.com/ns/plugins/1.0"
-           id="nfc.plugin.NfcVPlugin"
-      version="0.1.0">
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        id="nfc.plugin.NfcVPlugin"
+        version="0.1.0">
     <name>NfcVPlugin</name>
-    <description>Cordova plugin for reading and writing to NFC tags using NfcV protocol (with support for Ionic2)</description>
+    <description>Cordova plugin for reading and writing to NFC tags using NfcV protocol (with support for Ionic2)
+    </description>
     <license>MIT</license>
     <keywords>nfc, nfcv, cordova, ionic</keywords>
- 
+
     <js-module src="www/nfcvplugin.js" name="NfcV">
-        <clobbers target="NfcV" />
+        <clobbers target="NfcV"/>
     </js-module>
- 
+
     <!-- android -->
     <platform name="android">
-        
         <config-file target="res/xml/config.xml" parent="/*">
             <feature name="NfcVPlugin">
                 <param name="android-package" value="nfc.plugin.NfcVPlugin"/>
-				<param name="onload" value="true" />
+                <param name="onload" value="true"/>
             </feature>
             <preference name="AndroidLaunchMode" value="singleTask"/>
         </config-file>
- 
-        <source-file src="src/android/NfcVPlugin.java" target-dir="src/nfc/plugin" />      
-		<source-file src="src/android/NfcVHandler.java" target-dir="src/nfc/plugin" />
+
+        <source-file src="src/android/NfcVPlugin.java" target-dir="src/nfc/plugin"/>
+        <source-file src="src/android/NfcVHandler.java" target-dir="src/nfc/plugin"/>
 
         <config-file target="AndroidManifest.xml" parent="/manifest">
             <uses-permission android:name="android.permission.NFC"/>
             <uses-feature android:name="android.hardware.nfc" android:required="false"/>
         </config-file>
-
-     </platform>          
+    </platform>
 </plugin>
