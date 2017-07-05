@@ -167,7 +167,7 @@ export class NfcvService {
             this.startListening(startListen, device)
                 .then(() => {
                     // Create promise that immediately resolves
-                    let readPromise = new Promise((readResolve) => {
+                    let readPromise = new Promise<void>((readResolve) => {
                         readResolve();
                     });
 
@@ -234,7 +234,7 @@ export class NfcvService {
             this.startListening(startListen, device)
                 .then(() => {
                     // Create promise that immediately resolves
-                    let writePromise = new Promise((writeResolve) => {
+                    let writePromise = new Promise<void>((writeResolve) => {
                         writeResolve();
                     });
 

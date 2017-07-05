@@ -28,6 +28,14 @@ If you won't be using Ionic2+ framework but your project will use Angular 2+, yo
 use Nfcv service. Make sure you install NPM dependency and then you just import the service 
 and use it.
 
+## Requirements
+
+Make sure you have the latest version of NodeJS and NPM.
+
+Make sure you installed Typescript globally:
+
+`npm install -g typescript`
+
 ## Example
 
 app.component.ts
