@@ -1,8 +1,3 @@
-# Cordova files
-#/src
-#/www
-#/plugin.xml
-
 # Node generated files
 node_modules
 npm-debug.log
@@ -12,6 +7,11 @@ Thumbs.db
 .DS_Store
 .idea
 
-# Ignored files
+# Cordova files
+#/src
+#/www
+#/plugin.xml
+
+# Typescript files
 #*.ts
 #!*.d.ts

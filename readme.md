@@ -4,6 +4,10 @@ Cordova plugin for reading and writing to NFC tags using NfcV protocol (with sup
 
 Installation:
 ----------------------------------------------------
+
+Requirements: Make sure you have a working environment for Ionic2+ project or for Cordova project before installing 
+the plugin.
+
 Ionic2+:
 
 `ionic plugin add https://github.com/valentiniljaz/cordova-nfcv-plugin`
