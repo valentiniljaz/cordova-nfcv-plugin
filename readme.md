@@ -50,7 +50,7 @@ Check if Nfc hardware is available.
 * success - Function returns "NFC_CHECK_OK"
 * error - Check error flags below
 
-#### `NfcV.addNdefListner: function (success, error));`
+#### `NfcV.addNdefListener: function (success, error));`
 
 Get notified when ever new device is discovered. Ndef message is sent in event data.
 
