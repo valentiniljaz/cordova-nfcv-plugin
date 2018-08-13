@@ -159,6 +159,12 @@ export class NfcvService {
     public stopListening() {
         NfcV.stopListening();
     }
+    
+    public transceive(data) {
+        return new Promise(((resolve, reject) => {
+            NfcV.transceive(data, (res) => resolve(new Uint8Array(res)), (err) => reject(err));
+        }))
+    }
 
     public read(blocks: any[], startListen?, device?): Promise<any> {
         console.log('** READ START **', blocks);
