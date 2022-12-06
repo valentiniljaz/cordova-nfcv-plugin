@@ -258,7 +258,11 @@ public class NfcVHandler {
         Intent foregroundIntent = new Intent(activity.getApplicationContext(), activity.getClass());
         foregroundIntent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
-        this.foregroundPendingIntent = PendingIntent.getActivity(activity.getApplicationContext(), 0, foregroundIntent, 0);
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+            this.foregroundPendingIntent = PendingIntent.getActivity(activity.getApplicationContext(), 0, foregroundIntent, PendingIntent.FLAG_MUTABLE);
+        } else {
+            this.foregroundPendingIntent = PendingIntent.getActivity(activity.getApplicationContext(), 0, foregroundIntent, 0);
+        }
 
         IntentFilter filterNdef = new IntentFilter(NfcAdapter.ACTION_NDEF_DISCOVERED);
         try {
